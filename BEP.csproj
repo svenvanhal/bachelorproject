@@ -7,7 +7,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{2E9F822F-947E-43EE-A440-33C280785651}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>BEP</RootNamespace>
+    <RootNamespace>Timetable</RootNamespace>
     <AssemblyName>BEP</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <NuGetPackageImportStamp>
