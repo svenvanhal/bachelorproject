@@ -36,7 +36,7 @@
     <Compile Include="timetable\Algorithms.Tests\FetAlgorithmTest.cs" />
     <Compile Include="timetable\Algorithms\FetAlgorithm.cs" />
     <Compile Include="timetable\Exceptions\AlgorithmException.cs" />
-    <Compile Include="timetable\Algorithms\IAlgorithm.cs" />
+    <Compile Include="timetable\Algorithms\Algorithm.cs" />
     <Compile Include="timetable\Application.cs" />
     <Compile Include="timetable\Helper.Tests\CommandLineArgumentsTest.cs" />
     <Compile Include="timetable\Resources\Timetable.cs" />
@@ -44,24 +44,41 @@
     <Compile Include="timetable\Helper\Util.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>packages\NLog.4.5.4\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=3.10.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>packages\NUnit.3.10.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
     <None Include=".gitignore" />
+    <None Include="testdata\fet\activities_missing.fet">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="testdata\fet\United-Kingdom\Hopwood\Hopwood.fet">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testdata\fet\Italy\2007\difficult\highschool-Ancona.fet">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -79,6 +96,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="appveyor.yml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="testdata\books.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Target Name="BeforeBuild">
     <RemoveDir Directories="$(TargetDir)lib\" />
