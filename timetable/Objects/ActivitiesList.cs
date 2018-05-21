@@ -1,14 +1,14 @@
 ﻿using System;
-using Timetable.timetable.DB;
+using Timetabling.DB;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Timetable.timetable.Objects
+namespace Timetabling.Objects
 {
 	public class ActivitiesList : AbstractList
 	{
 		/// <summary>
-        /// Initializes a new instance of the <see cref="T:Timetable.timetable.Objects.ActivitiesList"/> class.
+        /// Initializes a new instance of the <see cref="T:Timetabling.Objects.ActivitiesList"/> class.
         /// </summary>
         /// <param name="_db">Database model</param>
 		public ActivitiesList(DataModel _db) : base(_db)

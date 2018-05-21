@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Xml.Linq;
-using Timetable.timetable.DB;
+using Timetabling.DB;
 using System.Linq;
 
-namespace Timetable.timetable.Objects
+namespace Timetabling.Objects
 {
 	public abstract class AbstractConstraint
 	{

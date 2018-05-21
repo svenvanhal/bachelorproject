@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
-using Timetable.timetable.DB;
+using Timetabling.DB;
 
-namespace Timetable.timetable.Objects
+namespace Timetabling.Objects
 {
 	public class ConstraintBasicCompulsoryTime : AbstractConstraint
 	{

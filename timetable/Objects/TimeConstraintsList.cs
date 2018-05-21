@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Timetable.timetable.DB;
+using Timetabling.DB;
 
-namespace Timetable.timetable.Objects
+namespace Timetabling.Objects
 
 
 

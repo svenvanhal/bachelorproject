@@ -7,7 +7,7 @@ using System.Linq;
 using System.Xml.Linq;
 using System.IO;
 
-namespace Timetable.timetable.XML
+namespace Timetabling.XML
 {
     [TestFixture()]
     public class XmlCreatorTest

@@ -1,11 +1,11 @@
-namespace Timetable.timetable.DB
+namespace Timetabling.DB
 {
     using System;
     using System.Data.Entity;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
     using System.Xml;
-    using Timetable.timetable.XML;
+    using Timetabling.XML;
     using System.Xml.Linq;
 
     public partial class DataModel : DbContext

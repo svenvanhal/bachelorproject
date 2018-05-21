@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Xml.Linq;
-using Timetable.timetable.DB;
+using Timetabling.DB;
 
-namespace Timetable.timetable.Objects.Constraints.TimeConstraints.Tests
+namespace Timetabling.Objects.Constraints.TimeConstraints.Tests
 {
 	[TestFixture()]
 	public class ConstraintStudentsSetMaxHoursContinuouslyTest

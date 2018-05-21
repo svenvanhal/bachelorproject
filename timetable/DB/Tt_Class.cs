@@ -1,4 +1,4 @@
-namespace Timetable.timetable.DB
+namespace Timetabling.DB
 {
 	using System;
 	using System.Collections.Generic;
@@ -6,12 +6,12 @@ namespace Timetable.timetable.DB
 	using System.ComponentModel.DataAnnotations.Schema;
 	using System.Data.Entity.Spatial;
 	using System.Xml.Linq;
-	using Timetable.timetable.XML;
+	using Timetabling.XML;
 
 	public partial class Tt_Class
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Timetable.timetable.DB.Tt_Class"/> class.
+		/// Initializes a new instance of the <see cref="T:Timetabling.DB.Tt_Class"/> class.
 		/// </summary>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
 		public Tt_Class()
@@ -55,7 +55,7 @@ namespace Timetable.timetable.DB
 
 		public bool IsShared { get; set; }
 		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="T:Timetable.timetable.DB.Tt_Class"/> is home.
+		/// Gets or sets a value indicating whether this <see cref="T:Timetabling.DB.Tt_Class"/> is home.
 		/// </summary>
 		/// <value><c>true</c> if is home; otherwise, <c>false</c>.</value>
 		public bool IsHome { get; set; }

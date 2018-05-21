@@ -1,10 +1,10 @@
 ﻿using System;
-using Timetable.timetable.DB;
+using Timetabling.DB;
 using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
 
-namespace Timetable.timetable.Objects
+namespace Timetabling.Objects
 {
 	public class DaysList : AbstractList
 	{

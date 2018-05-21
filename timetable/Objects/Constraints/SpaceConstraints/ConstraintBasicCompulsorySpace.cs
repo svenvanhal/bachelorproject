@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
-using Timetable.timetable.DB;
+using Timetabling.DB;
 
-namespace Timetable.timetable.Objects
+namespace Timetabling.Objects
 {
 	public class ConstraintBasicCompulsorySpace : AbstractConstraint
 	{
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Timetable.timetable.Objects.ConstraintBasicCompulsorySpace"/> class.
+        /// Initializes a new instance of the <see cref="T:Timetabling.Objects.ConstraintBasicCompulsorySpace"/> class.
         /// </summary>
 		public ConstraintBasicCompulsorySpace() 
 		{

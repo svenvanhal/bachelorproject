@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Xml.Linq;
-using Timetable.timetable.DB;
+using Timetabling.DB;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Timetable.timetable.Objects
+namespace Timetabling.Objects
 {
 	public class ConstraintStudentsSetMaxHoursDaily : AbstractConstraint
 	{
@@ -15,7 +15,7 @@ namespace Timetable.timetable.Objects
 
 		/// <summary>
 		/// Initializes a new instance of the
-		/// <see cref="T:Timetable.timetable.Objects.ConstraintStudentsSetMaxHoursDaily"/> class.
+		/// <see cref="T:Timetabling.Objects.ConstraintStudentsSetMaxHoursDaily"/> class.
 		/// </summary>
 		/// <param name="_maxHoursDaily">Max hours daily.</param>
 		/// <param name="_gradeName">Grade name.</param>

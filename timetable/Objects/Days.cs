@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Timetable.timetable.Objects
+namespace Timetabling.Objects
 {
 	/// <summary>
     /// Days.

@@ -1,4 +1,5 @@
-﻿<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="packages\NUnit3TestAdapter.3.10.0\build\net35\NUnit3TestAdapter.props" Condition="Exists('packages\NUnit3TestAdapter.3.10.0\build\net35\NUnit3TestAdapter.props')" />
   <Import Project="packages\NUnit.3.10.1\build\NUnit.props" Condition="Exists('packages\NUnit.3.10.1\build\NUnit.props')" />
   <PropertyGroup>
@@ -9,7 +10,8 @@
     <RootNamespace>Timetable</RootNamespace>
     <AssemblyName>BEP</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <NuGetPackageImportStamp></NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
+    <DocumentationFile>bin\Debug\Documentation.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <Optimize>true</Optimize>
@@ -27,9 +30,20 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
+    <DocumentationFile>bin\Release\Documentation.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="timetable\Application\Main.cs" />
+    <Compile Include="timetable\Algorithms.Tests\FET\FetOutputProcessorTest.cs" />
+    <Compile Include="timetable\Algorithms.Tests\FET\FetAlgorithmTest.cs" />
+    <Compile Include="timetable\Algorithms\FET\FetAlgorithm.cs" />
+    <Compile Include="timetable\Algorithms\FET\FetOutputProcessor.cs" />
+    <Compile Include="timetable\Exceptions\AlgorithmException.cs" />
+    <Compile Include="timetable\Algorithms\Algorithm.cs" />
+    <Compile Include="timetable\Application.cs" />
+    <Compile Include="timetable\Helper.Tests\CommandLineArgumentsTest.cs" />
+    <Compile Include="timetable\Resources\Timetable.cs" />
+    <Compile Include="timetable\Helper\CommandLineArguments.cs" />
+    <Compile Include="timetable\Helper\Util.cs" />
     <Compile Include="timetable\DB\School_TeacherSubjects.cs" />
     <Compile Include="timetable\DB\DataModel.cs" />
     <Compile Include="timetable\DB\HR_MasterData_Employees.cs" />
@@ -82,15 +96,24 @@
     <Compile Include="timetable\XML.Tests\XmlCreatorTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>packages\NLog.4.5.4\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=3.10.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>packages\NUnit.3.10.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Data" />
+    <Reference Include="System.IO.Abstractions, Version=2.1.0.178, Culture=neutral, PublicKeyToken=96bf224d23c43e59, processorArchitecture=MSIL">
+      <HintPath>packages\System.IO.Abstractions.2.1.0.178\lib\net40\System.IO.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Configuration" />
     <Reference Include="EntityFramework">
       <HintPath>packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
@@ -100,6 +123,15 @@
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="Castle.Core">
+      <HintPath>packages\Castle.Core.4.2.1\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="TestingHelpers, Version=2.1.0.178, Culture=neutral, PublicKeyToken=96bf224d23c43e59, processorArchitecture=MSIL">
+      <HintPath>packages\System.IO.Abstractions.TestingHelpers.2.1.0.178\lib\net40\TestingHelpers.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.CodeCoverage.Shim">
       <HintPath>packages\Microsoft.CodeCoverage.1.0.3\lib\netstandard1.0\Microsoft.VisualStudio.CodeCoverage.Shim.dll</HintPath>
     </Reference>
@@ -118,25 +150,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include=".travis.yml" />
-    <None Include="packages.config" />
+    <None Include="app.config">
+    </None>
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config">
+    </None>
     <None Include=".gitignore" />
-    <None Include="app.config" />
-    <None Include="bin\Debug\FET Files\.DS_Store" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <Folder Include="timetable\DB\" />
-    <Folder Include="timetable\XML\" />
-    <Folder Include="timetable\Objects\" />
-    <Folder Include="timetable\Application.Tests\" />
-    <Folder Include="timetable\Objects\Constraints\" />
-    <Folder Include="timetable\Objects\Constraints\TimeConstraints\" />
-    <Folder Include="timetable\Objects\Constraints\SpaceConstraints\" />
-    <Folder Include="timetable\Objects\Constraints\TimeConstraints.Tests\" />
-    <Folder Include="timetable\Objects\Constraints\SpaceConstraints.Tests\" />
-    <Folder Include="timetable\Objects.Tests\" />
-    <Folder Include="timetable\XML.Tests\" />
+    <None Include="testdata\fet\activities_missing.fet">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="testdata\fet\United-Kingdom\Hopwood\Hopwood.fet">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="testdata\fet\Italy\2007\difficult\highschool-Ancona.fet">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -145,5 +175,35 @@
     </PropertyGroup>
     <Error Condition="!Exists('packages\NUnit.3.10.1\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\NUnit.3.10.1\build\NUnit.props'))" />
     <Error Condition="!Exists('packages\NUnit3TestAdapter.3.10.0\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\NUnit3TestAdapter.3.10.0\build\net35\NUnit3TestAdapter.props'))" />
+  </Target>
+  <ItemGroup>
+    <LibWindows Include="$(ProjectDir)lib\windowsnt\**\*.*" />
+    <LibMacOS Include="$(ProjectDir)lib\unix\*.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="appveyor.yml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="testdata\books.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="testdata\fet\United-Kingdom\Hopwood\invalid.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="testdata\fet\United-Kingdom\Hopwood\empty.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="testdata\fet\United-Kingdom\Hopwood\output.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Target Name="BeforeBuild">
+    <RemoveDir Directories="$(TargetDir)lib\" />
+  </Target>
+  <Target Name="AfterBuild">
+    <Copy Condition=" '$(OS)' == 'Windows_NT' " SourceFiles="@(LibWindows)" DestinationFiles="@(LibWindows->'$(TargetDir)lib\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <!-- Copy task with %RecursiveDir fails on Mono xbuild/msbuild, falling back to cp command -->
+    <Exec Condition=" '$(OS)' == 'Unix' " Command="cp -R $(ProjectDir)lib/unix/ $(TargetDir)lib/" />
+    <Exec Condition=" '$(OS)' == 'Unix' " Command="chmod +x $(TargetDir)lib/fet/fet-cl" />
   </Target>
 </Project>

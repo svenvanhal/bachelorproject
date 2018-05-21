@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using System;
-namespace Timetable.timetable.Objects.Constraints.TimeConstraints.Tests
+namespace Timetabling.Objects.Constraints.TimeConstraints.Tests
 {
 	[TestFixture()]
 	public class ConstraintBasicCompulsorySpaceTest

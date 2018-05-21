@@ -2,7 +2,7 @@
 using System.IO;
 using System.Xml.Linq;
 
-namespace Timetable.timetable.XML
+namespace Timetabling.XML
 {
     public class XmlCreator
     {
@@ -12,7 +12,7 @@ namespace Timetable.timetable.XML
         private string pathName { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Timetable.timetable.XML.XmlCreator"/> class.
+        /// Initializes a new instance of the <see cref="T:Timetabling.XML.XmlCreator"/> class.
         /// </summary>
         private XmlCreator()
         {

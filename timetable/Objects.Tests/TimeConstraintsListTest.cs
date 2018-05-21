@@ -2,12 +2,12 @@
 using System;
 using Moq;
 using System.Data.Entity;
-using Timetable.timetable.Objects;
+using Timetabling.Objects;
 using System.Collections.Generic;
 using System.Linq; 
 using System.Xml.Linq; 
 
-namespace Timetable.timetable.DB.Tests
+namespace Timetabling.DB.Tests
 {
     [TestFixture()]
     public class TimeConstraintsListTest

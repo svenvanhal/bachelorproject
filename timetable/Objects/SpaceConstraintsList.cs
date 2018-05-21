@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Timetable.timetable.DB;
+using Timetabling.DB;
 
-namespace Timetable.timetable.Objects
+namespace Timetabling.Objects
 
 
 
@@ -13,7 +13,7 @@ namespace Timetable.timetable.Objects
 
 		List<AbstractConstraint> constraints;
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Timetable.timetable.Objects.SpaceConstraintsList"/> class.
+        /// Initializes a new instance of the <see cref="T:Timetabling.Objects.SpaceConstraintsList"/> class.
         /// </summary>
         /// <param name="_dB">D b.</param>
 		public SpaceConstraintsList(DataModel _dB) : base(_dB)

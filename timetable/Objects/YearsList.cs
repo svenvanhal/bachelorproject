@@ -1,16 +1,16 @@
 ﻿using System;
-using Timetable.timetable.DB;
+using Timetabling.DB;
 using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
 using System.Collections;
 
-namespace Timetable.timetable.Objects
+namespace Timetabling.Objects
 {
 	public class YearsList : AbstractList
 	{
 		/// <summary>
-        /// Initializes a new instance of the <see cref="T:Timetable.timetable.Objects.YearsList"/> class.
+        /// Initializes a new instance of the <see cref="T:Timetabling.Objects.YearsList"/> class.
         /// </summary>
         /// <param name="_dB">Database Model</param>
 		public YearsList(DataModel _dB) : base(_dB)
