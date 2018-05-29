@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using NUnit.Framework;
 using Timetabling.Algorithms.FET;
 using Timetabling.Exceptions;
@@ -11,7 +12,12 @@ namespace Timetabling.Tests.Algorithms.FET
 
     internal class FetProcessInterfaceExposer : FetProcessInterface
     {
-        public FetProcessInterfaceExposer(Process fetProcess) : base(fetProcess) { }
+        public new readonly Process Process;
+
+        public FetProcessInterfaceExposer(Process fetProcess, CancellationToken t) : base(fetProcess, t)
+        {
+            Process = fetProcess;
+        }
         public new void CheckProcessExitCode() => base.CheckProcessExitCode();
     }
 
@@ -29,7 +35,7 @@ namespace Timetabling.Tests.Algorithms.FET
             var fpb = new FetProcessBuilder(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "lib", "fet", "fet-cl"));
 
             _process = fpb.CreateProcess();
-            _fpi = new FetProcessInterfaceExposer(_process);
+            _fpi = new FetProcessInterfaceExposer(_process, CancellationToken.None);
         }
 
         [Test]
@@ -39,42 +45,37 @@ namespace Timetabling.Tests.Algorithms.FET
         }
 
         [Test]
-        public void StartProcess()
+        public void StartProcessTest()
         {
             _fpi.StartProcess();
             Assert.IsFalse(_fpi.Process.HasExited);
-            _fpi.TerminateProcess();
+            _fpi.KillProcess();
         }
 
         [Test]
-        public void TerminateProcess()
+        public void TerminateProcessTest()
         {
             var expected = _fpi.Process.StartInfo;
             _fpi.StartProcess();
-            _fpi.TerminateProcess();
+            _fpi.KillProcess();
 
-            // HasExited fails after process has been closed (why though??)
+            // HasExited fails after process has been killed (why though??)
             // So when this throws an InvalidOperationException, the process has been terminated
-            Assert.Throws<InvalidOperationException>(() =>
-            {
-                var test = _fpi.Process.HasExited;
-            });
+            Assert.Throws<InvalidOperationException>(() => Assert.True(_fpi.Process.HasExited));
 
             // Verify that the ProcessStartInfo matches the original (one of the few unique bits of information left on the Process object)
             Assert.AreEqual(expected, _fpi.Process.StartInfo);
-
         }
 
         [Test]
-        public void CheckProcessNotYetExitedCode()
+        public void CheckProcessNotYetExitedCodeTest()
         {
             _fpi.StartProcess();
             var ex = Assert.Throws<InvalidOperationException>(() => _fpi.CheckProcessExitCode());
-            Assert.AreEqual("The process has not yet exited.", ex.Message);
         }
 
         [Test]
-        public void CheckProcessZeroExitCode()
+        public void CheckProcessZeroExitCodeTest()
         {
             // Create process again with different arguments
             var fpb = new FetProcessBuilder(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "lib", "fet", "fet-cl"));
@@ -84,36 +85,63 @@ namespace Timetabling.Tests.Algorithms.FET
             fpb.SetOutputDir(Util.CreateTempFolder("testIdentifier"));
 
             _process = fpb.CreateProcess();
-            _fpi = new FetProcessInterfaceExposer(_process);
+            _fpi = new FetProcessInterfaceExposer(_process, CancellationToken.None);
 
             // Start process
             _fpi.StartProcess();
-            _fpi.Process.WaitForExit();
+
+            var task = _fpi.TaskCompletionSource.Task;
+            task.Wait();
         }
 
         [Test]
-        public void CheckProcessNonZeroExitCode()
+        public void CheckProcessNonZeroExitCodeTest()
         {
             // Create process again with different arguments
             var fpb = new FetProcessBuilder(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "lib", "fet", "fet-cl"));
 
-            // Hopwood runs usually very fast
-            fpb.SetInputFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "testdata", "fet", "United-Kingdom", "Hopwood", "invalid.xml"));
+            // Invalid input file
+            fpb.SetInputFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "testdata", "fet", "invalid.xml"));
             fpb.SetOutputDir(Util.CreateTempFolder("testIdentifier"));
 
             _process = fpb.CreateProcess();
-            _fpi = new FetProcessInterfaceExposer(_process);
+            _fpi = new FetProcessInterfaceExposer(_process, CancellationToken.None);
 
             // Start process
             _fpi.StartProcess();
 
+            var task = _fpi.TaskCompletionSource.Task;
+
             // Assertions
-            var ex = Assert.Throws<AlgorithmException>(() =>
-            {
-                _fpi.Process.WaitForExit();
-                _fpi.CheckProcessExitCode();
-            });
-            Assert.AreEqual("The FET process has exited with a non-zero exit code (1).", ex.Message);
+            var ex = Assert.Throws<AggregateException>(() => task.Wait());
+            Assert.IsInstanceOf<InvalidOperationException>(ex.InnerException);
+        }
+
+        [Test]
+        public void TaskCanceledConstructorTest()
+        {
+            var tcs = new CancellationTokenSource();
+            var token = tcs.Token;
+
+            tcs.Cancel();
+
+            var ex = Assert.Throws<OperationCanceledException>(() => new FetProcessInterface(null, token));
+        }
+
+        [Test]
+        public void InvalidProcessStartProcessTest()
+        {
+            var tcs = new CancellationTokenSource();
+            var token = tcs.Token;
+            var fpb = new FetProcessBuilder();
+
+            _process = fpb.CreateProcess();
+            _fpi = new FetProcessInterfaceExposer(_process, token);
+
+            var task = _fpi.StartProcess();
+
+            var ex = Assert.Throws<AggregateException>(() => task.Wait());
+            Assert.IsInstanceOf<InvalidOperationException>(ex.InnerException);
         }
 
     }

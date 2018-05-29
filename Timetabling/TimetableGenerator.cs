@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Timetabling.Algorithms;
 using Timetabling.Resources;
 
@@ -19,28 +21,43 @@ namespace Timetabling
         public string CurrentRunIdentifier { get; private set; }
 
         /// <summary>
-        /// Temporary method used for development purposes.
+        /// Cancellation token source.
         /// </summary>
-        public Timetable RunAlgorithm(Algorithm algorithm, string inputfile)
-        {
+        protected CancellationTokenSource TokenSource;
 
-            Logger.Info($"Starting algorithm run - {algorithm.GetType()}");
+        /// <inheritdoc />
+        public TimetableGenerator()
+        {
+            TokenSource = new CancellationTokenSource();
+        }
+
+        /// <inheritdoc />
+        ~TimetableGenerator()
+        {
+            TokenSource.Dispose();
+        }
+
+        /// <summary>
+        /// Run an algorithm on an input file.
+        /// </summary>
+        public Task<Timetable> RunAlgorithm(Algorithm algorithm, string inputfile)
+        {
+            Logger.Info($"Starting {algorithm.GetType().Name} algorithm run");
 
             // Generate new ID for this algorithm run
             RefreshIdentifier();
 
             // Generate timetable
-            var tt = algorithm.Execute(CurrentRunIdentifier, inputfile);
-
-            return tt;
+            return algorithm.GenerateTask(CurrentRunIdentifier, inputfile, TokenSource.Token);
         }
 
         /// <summary>
-        /// Temporary method used for development purposes.
+        /// Terminate the algorithm that is currently running.
         /// </summary>
-        public void StopAlgorithm(Algorithm algorithm)
+        public void TerminateAlgorithm()
         {
-            algorithm.Interrupt();
+            Logger.Info("Terminating algorithm");
+            TokenSource.Cancel();
         }
 
         /// <summary>
@@ -49,10 +66,8 @@ namespace Timetabling
         public void RefreshIdentifier()
         {
             CurrentRunIdentifier = Guid.NewGuid().ToString("B");
-
             Logger.Info($"Generated new identifier - {CurrentRunIdentifier}");
         }
-
 
     }
 }

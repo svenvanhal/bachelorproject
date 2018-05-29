@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using Timetabling.Exceptions;
 
 namespace Timetabling.Algorithms.FET
@@ -8,13 +10,18 @@ namespace Timetabling.Algorithms.FET
     /// <summary>
     /// Interfaces with the FET-CL command line program.
     /// </summary>
-    public class FetProcessInterface
+    internal class FetProcessInterface
     {
 
         /// <summary>
         /// FET-CL process.
         /// </summary>
-        public readonly Process Process;
+        protected readonly Process Process;
+
+        /// <summary>
+        /// Task source for process.
+        /// </summary>
+        protected internal readonly TaskCompletionSource<bool> TaskCompletionSource;
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -22,35 +29,70 @@ namespace Timetabling.Algorithms.FET
         /// Create new process interface.
         /// </summary>
         /// <param name="fetProcess">FET-CL process</param>
-        public FetProcessInterface(Process fetProcess)
+        /// <param name="t">Cancellation token</param>
+        public FetProcessInterface(Process fetProcess, CancellationToken t)
         {
+            // Check if process task has been cancelled already
+            if (t.IsCancellationRequested) t.ThrowIfCancellationRequested();
+
             Process = fetProcess;
+
+            TaskCompletionSource = new TaskCompletionSource<bool>(t);
+            t.Register(StopProcess);
         }
 
         /// <summary>
         /// Starts process and logs output.
         /// </summary>
-        public virtual void StartProcess()
+        public virtual Task StartProcess()
         {
+            Logger.Info("Starting FET process");
 
-            // Attach listeners
+            // Attach listeners to process
             Process.OutputDataReceived += Log;
-            Process.Exited += (sender, args) => CheckProcessExitCode();
+            Process.Exited += (sender, args) =>
+            {
+                CheckProcessExitCode();
 
-            // Start process
-            Process.Start();
-            Process.BeginOutputReadLine();
+                // Process exited successfully
+                TaskCompletionSource.TrySetResult(true);
+            };
+
+            try
+            {
+
+                // Start process
+                Process.Start();
+                Process.BeginOutputReadLine();
+
+            }
+            catch (InvalidOperationException ex) { TaskCompletionSource.TrySetException(ex); }
+
+            return TaskCompletionSource.Task;
         }
 
         /// <summary>
         /// Gracefully stops process.
         /// </summary>
-        public virtual void TerminateProcess()
+        public virtual void StopProcess()
         {
 
-            // Close process
-            Process.Close();
+            // TODO: Send SIGTERM
 
+            // TODO: Close process
+
+            // TODO: Wait 5 secs, else kill process
+
+            KillProcess();
+        }
+
+        /// <summary>
+        /// Kill process.
+        /// </summary>
+        public virtual void KillProcess()
+        {
+            Process.Kill();
+            Process.Dispose();
         }
 
         /// <summary>
@@ -60,10 +102,10 @@ namespace Timetabling.Algorithms.FET
         protected void CheckProcessExitCode()
         {
             // Check if process has exited
-            if(!Process.HasExited) throw new InvalidOperationException("The process has not yet exited.");
+            if (!Process.HasExited) TaskCompletionSource.TrySetException(new InvalidOperationException("The process has not yet exited."));
 
             // Check exit code
-            if (Process.ExitCode != 0) throw new AlgorithmException($"The FET process has exited with a non-zero exit code ({Process.ExitCode}).");
+            if (Process.ExitCode != 0) TaskCompletionSource.TrySetException(new InvalidOperationException($"The FET process has exited with a non-zero exit code ({Process.ExitCode})."));
         }
 
         /// <summary>
@@ -74,7 +116,7 @@ namespace Timetabling.Algorithms.FET
         protected void Log(object sender, DataReceivedEventArgs eventArgs)
         {
             var data = eventArgs.Data;
-            if (!string.IsNullOrWhiteSpace(data)) Logger.Debug(data);
+            if (!string.IsNullOrWhiteSpace(data)) Logger.Trace(data);
         }
 
     }
