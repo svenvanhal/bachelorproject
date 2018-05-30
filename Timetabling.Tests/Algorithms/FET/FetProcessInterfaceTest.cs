@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Timetabling.Algorithms.FET;
-using Timetabling.Exceptions;
 using Timetabling.Helper;
 
 namespace Timetabling.Tests.Algorithms.FET
@@ -33,6 +34,7 @@ namespace Timetabling.Tests.Algorithms.FET
         {
             // Can't mock sealed class process, so create a real instance here
             var fpb = new FetProcessBuilder(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "lib", "fet", "fet-cl"));
+            fpb.SetInputFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "testdata", "fet", "Italy", "2007", "difficult", "highschool-Ancona.fet"));
 
             _process = fpb.CreateProcess();
             _fpi = new FetProcessInterfaceExposer(_process, CancellationToken.None);
@@ -71,7 +73,8 @@ namespace Timetabling.Tests.Algorithms.FET
         public void CheckProcessNotYetExitedCodeTest()
         {
             _fpi.StartProcess();
-            var ex = Assert.Throws<InvalidOperationException>(() => _fpi.CheckProcessExitCode());
+            Assert.Throws<InvalidOperationException>(() => _fpi.CheckProcessExitCode());
+            _fpi.KillProcess();
         }
 
         [Test]
@@ -91,7 +94,9 @@ namespace Timetabling.Tests.Algorithms.FET
             _fpi.StartProcess();
 
             var task = _fpi.TaskCompletionSource.Task;
-            task.Wait();
+
+            // Fail if the task did not exit successfully
+            task.ContinueWith(_ => Assert.Fail(), TaskContinuationOptions.NotOnRanToCompletion);
         }
 
         [Test]
@@ -109,23 +114,9 @@ namespace Timetabling.Tests.Algorithms.FET
 
             // Start process
             _fpi.StartProcess();
-
-            var task = _fpi.TaskCompletionSource.Task;
-
-            // Assertions
-            var ex = Assert.Throws<AggregateException>(() => task.Wait());
+            var ex = Assert.Throws<AggregateException>(() => _fpi.TaskCompletionSource.Task.Wait());
             Assert.IsInstanceOf<InvalidOperationException>(ex.InnerException);
-        }
 
-        [Test]
-        public void TaskCanceledConstructorTest()
-        {
-            var tcs = new CancellationTokenSource();
-            var token = tcs.Token;
-
-            tcs.Cancel();
-
-            var ex = Assert.Throws<OperationCanceledException>(() => new FetProcessInterface(null, token));
         }
 
         [Test]
@@ -140,7 +131,8 @@ namespace Timetabling.Tests.Algorithms.FET
 
             var task = _fpi.StartProcess();
 
-            var ex = Assert.Throws<AggregateException>(() => task.Wait());
+            // Assertions
+            var ex = Assert.Throws<AggregateException>(() => _fpi.TaskCompletionSource.Task.Wait());
             Assert.IsInstanceOf<InvalidOperationException>(ex.InnerException);
         }
 
