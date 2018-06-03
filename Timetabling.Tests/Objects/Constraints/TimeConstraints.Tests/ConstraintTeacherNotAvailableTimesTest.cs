@@ -28,7 +28,7 @@ namespace Timetabling.Tests.Objects.Constraints.TimeConstraints
             mockSet.As<IQueryable<Tt_TimeOff>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
 
             var dataEmp = new List<HR_MasterData_Employees>{
-                new HR_MasterData_Employees{EmployeeID = 4, IsActive = true, timeOffConstraint=50},
+                new HR_MasterData_Employees{EmployeeID = 4, IsActive = true, timeOffConstraint=50, IsTeacher =true},
             }.AsQueryable();
 
             var mockSetEmp = new Mock<DbSet<HR_MasterData_Employees>>();
