@@ -19,6 +19,10 @@ namespace Implementation
             //   4 - Let the TimetableGenerator generate a Task<Timetable>
             //   5 - Do something with the Timetable output object when the Task finishes
 
+            var inputGenerator = new ResourceGatherer(new DataModel());
+            return;
+
+
             var algorithm = new FetAlgorithm();
 
             // TODO: improve FET input file generation

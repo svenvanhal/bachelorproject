@@ -31,11 +31,10 @@ namespace Timetabling.Algorithms.FET
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly IFileSystem _fs;
         private readonly string _baseDir;
+        private bool _partial;
 
         /// <inheritdoc />
         public FetOutputProcessor(string inputName, string outputDir) : this(inputName, outputDir, new FileSystem()) { }
-
-        private bool _partial;
 
         /// <summary>
         /// Create new FetOutputProcessor.

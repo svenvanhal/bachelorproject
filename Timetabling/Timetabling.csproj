@@ -36,6 +36,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Algorithms\FET\FetInputGenerator.cs" />
     <Compile Include="Algorithms\FET\FetLanguage.cs" />
     <Compile Include="Algorithms\FET\FetProcessBuilder.cs" />
     <Compile Include="Algorithms\FET\FetAlgorithm.cs" />
@@ -44,6 +45,19 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Exceptions\AlgorithmException.cs" />
     <Compile Include="Algorithms\Algorithm.cs" />
+    <Compile Include="Resources\Constraints\BasicSpaceConstraint.cs" />
+    <Compile Include="Resources\Constraints\BasicTimeConstraint.cs" />
+    <Compile Include="Resources\Day.cs" />
+    <Compile Include="Resources\Activity.cs" />
+    <Compile Include="Resources\Constraints\AbstractConstraint.cs" />
+    <Compile Include="Resources\SubGroup.cs" />
+    <Compile Include="Resources\Group.cs" />
+    <Compile Include="Resources\StudentSet.cs" />
+    <Compile Include="Resources\Subject.cs" />
+    <Compile Include="Resources\Teacher.cs" />
+    <Compile Include="Resources\Room.cs" />
+    <Compile Include="Resources\Timeslot.cs" />
+    <Compile Include="Resources\TimetableResourceCollection.cs" />
     <Compile Include="TimetableGenerator.cs" />
     <Compile Include="Resources\Timetable.cs" />
     <Compile Include="Helper\CommandLineArguments.cs" />

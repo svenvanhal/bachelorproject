@@ -1,5 +1,7 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Xml.Linq;
 using Timetabling.DB;
+using Timetabling.Resources;
 
 namespace Timetabling.Objects
 {
@@ -32,6 +34,21 @@ namespace Timetabling.Objects
             {
                 List.Add(new XElement("Hour", new XElement("Name", i)));
             }
+        }
+
+        public Dictionary<int, Timeslot> GetTimeslots()
+        {
+
+            var timeslots = new Dictionary<int, Timeslot>();
+
+            for (var i = 1; i <= numberOfHours; i++)
+            {
+                timeslots.Add(i, new Timeslot{
+                    Name = $"Period {i}"
+                });
+            }
+
+            return timeslots;
         }
     }
 

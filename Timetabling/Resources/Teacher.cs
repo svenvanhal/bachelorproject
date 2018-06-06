@@ -1,0 +1,13 @@
+﻿using System.Runtime.Serialization;
+
+namespace Timetabling.Resources
+{
+
+    public class Teacher
+    {
+
+        public int Id { get; set; }
+        public string Name { get; set; }
+
+    }
+}
