@@ -50,15 +50,17 @@ namespace Timetabling.Objects
 
         }
 
-        public Dictionary<int, Activity> GetActivities(TimetableResourceCollection resources)
+        public static Dictionary<int, Activity> GetActivities(DataModel model, TimetableResourceCollection resources)
         {
 
             var activities = new Dictionary<int, Activity>();
 
-            var query = from activity in dB.School_TeacherClass_Subjects
-                        join c in dB.School_Lookup_Class on activity.ClassID equals c.ClassID
-                        join s in dB.Subject_SubjectGrade on new { activity.SubjectID, c.GradeID } equals new { s.SubjectID, s.GradeID }
+            var query = from activity in model.School_TeacherClass_Subjects
+                        join c in model.School_Lookup_Class on activity.ClassID equals c.ClassID
+                        join s in model.Subject_SubjectGrade on new { activity.SubjectID, c.GradeID } equals new { s.SubjectID, s.GradeID }
                         select new { activity.TeacherID, activity.SubjectID, c.ClassID, activity.ID, s.NumberOfLlessonsPerWeek, s.NumberOfLlessonsPerDay };
+
+            var counter = 0;
 
             // Loop over all activities
             foreach (var activity in query)
@@ -66,7 +68,6 @@ namespace Timetabling.Objects
 
                 // Create internal activity ID
                 var groupId = counter;
-                var totalDuration = activity.NumberOfLlessonsPerDay * activity.NumberOfLlessonsPerWeek;
 
                 // Add an activity for each lesson
                 for (var i = 1; i <= activity.NumberOfLlessonsPerWeek; i++)

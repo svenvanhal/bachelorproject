@@ -32,12 +32,12 @@ namespace Timetabling.Objects
             }
         }
 
-        public Dictionary<int, Subject> GetSubjects()
+        public static Dictionary<int, Subject> GetSubjects(DataModel model)
         {
 
             var subjects = new Dictionary<int, Subject>();
 
-            var query = dB.Subject_MasterData_Subject.Where(subject => subject.IsActive == true);
+            var query = model.Subject_MasterData_Subject.Where(subject => subject.IsActive == true);
 
             foreach (var subject in query)
             {

@@ -36,12 +36,12 @@ namespace Timetabling.Objects
             }
         }
 
-        public Dictionary<int, Timeslot> GetTimeslots()
+        public static Dictionary<int, Timeslot> GetTimeslots()
         {
 
             var timeslots = new Dictionary<int, Timeslot>();
 
-            for (var i = 1; i <= numberOfHours; i++)
+            for (var i = 1; i <= 9; i++)
             {
                 timeslots.Add(i, new Timeslot{
                     Name = $"Period {i}"

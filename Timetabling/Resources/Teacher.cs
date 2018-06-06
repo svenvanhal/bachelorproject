@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace Timetabling.Resources
+﻿namespace Timetabling.Resources
 {
 
     public class Teacher

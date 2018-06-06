@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Xml.Serialization;
 
 namespace Timetabling.Resources
 {
@@ -9,9 +7,10 @@ namespace Timetabling.Resources
     public class Group
     {
 
+        public int Id { get; set; }
         public string Name { get; set; }
         public int StudentCount { get; set; }
-        public List<SubGroup> SubGroups { get; set; }
+        public Dictionary<int, SubGroup> SubGroups { get; set; } = new Dictionary<int, SubGroup>();
 
     }
 }

@@ -12,23 +12,20 @@ namespace Implementation
         public ResourceGatherer(DataModel dataModel)
         {
 
-            var daysList = new DaysList(dataModel);
-            var hoursList = new HoursList(dataModel);
-            var teachersList = new TeachersList(dataModel);
-            var subjectsList = new SubjectsList(dataModel);
+            var resources = new TimetableResourceCollection
+            {
+                Days = DaysList.GetDays(),
+                Timeslots = HoursList.GetTimeslots(),
+                Teachers = TeachersList.GetTeachers(dataModel),
+                Subjects = SubjectsList.GetSubjects(dataModel),
+                Rooms = RoomsList.GetRooms(dataModel),
+                Students = YearsList.GetYears(dataModel),
+                TimeConstraints = null, // TODO
+                SpaceConstraints = null // TODO
+            };
 
-            //var activitiesList = new ActivitiesList(dataModel);
-            //var yearsList = new YearsList(dataModel);
-            //var timeConstraintsList = new TimeConstraintsList(dataModel);
-            //var spaceConstraintsList = new SpaceConstraintsList(dataModel);
-            var roomsList = new RoomsList(dataModel);
-
-            var resources = new TimetableResourceCollection();
-            resources.Days = daysList.GetDays();
-            resources.Timeslots = hoursList.GetTimeslots();
-            resources.Teachers = teachersList.GetTeachers();
-            resources.Subjects = subjectsList.GetSubjects();
-            resources.Rooms = roomsList.GetRooms();
+            // Note: we need to pass the generated resources up to this moment!
+            resources.Activities = ActivitiesList.GetActivities(dataModel, resources);
 
             Console.Read();
 

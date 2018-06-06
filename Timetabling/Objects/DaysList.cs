@@ -33,7 +33,7 @@ namespace Timetabling.Objects
             }
         }
 
-        public Dictionary<int, Day> GetDays()
+        public static Dictionary<int, Day> GetDays()
         {
 
             var days = new Dictionary<int, Day>();

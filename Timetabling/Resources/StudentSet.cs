@@ -6,9 +6,10 @@ namespace Timetabling.Resources
     public class StudentSet
     {
 
-        public string Name;
-        public int StudentCount;
-        public List<Group> Groups;
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int StudentCount { get; set; }
+        public Dictionary<int, Group> Groups { get; set; } = new Dictionary<int, Group>();
 
     }
 }

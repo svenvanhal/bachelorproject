@@ -33,12 +33,12 @@ namespace Timetabling.Objects
             }
         }
 
-        public Dictionary<int, Room> GetRooms()
+        public static Dictionary<int, Room> GetRooms(DataModel model)
         {
 
             var rooms = new Dictionary<int, Room>();
 
-            var query = dB.School_BuildingsUnits.Where(room => room.IsActive == true);
+            var query = model.School_BuildingsUnits.Where(room => room.IsActive == true);
 
             // Loop over all rooms
             foreach (var room in query)

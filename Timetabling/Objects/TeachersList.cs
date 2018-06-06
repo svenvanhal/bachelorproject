@@ -33,12 +33,12 @@ namespace Timetabling.Objects
             }
         }
 
-        public Dictionary<int, Teacher> GetTeachers()
+        public static Dictionary<int, Teacher> GetTeachers(DataModel model)
         {
 
             var teachers = new Dictionary<int, Teacher>();
 
-            var query = dB.HR_MasterData_Employees.Where(teacher => teacher.IsTeacher == true && teacher.IsActive == true);
+            var query = model.HR_MasterData_Employees.Where(teacher => teacher.IsTeacher == true && teacher.IsActive == true);
 
             // Loop over all teachers
             foreach (var teacher in query)

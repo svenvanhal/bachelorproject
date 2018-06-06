@@ -75,16 +75,17 @@ namespace Timetabling.Algorithms.FET
                         {
                             Name = "2018",
                             StudentCount = 1,
-                            Groups = new List<Group>
+                            Groups = new Dictionary<int, Group>
                             {
-                                new Group
-                                {
-                                    Name = "GroupName",
-                                    StudentCount = 1,
-                                    SubGroups = new List<SubGroup>
+                                { 1, new Group
                                     {
-                                        new SubGroup {Name = "SubgroupName", StudentCount = 1},
-                                        new SubGroup {Name = "SubgroupName2", StudentCount = 1}
+                                        Name = "GroupName",
+                                        StudentCount = 1,
+                                        SubGroups = new Dictionary<int, SubGroup>
+                                        {
+                                            {1, new SubGroup {Name = "SubgroupName", StudentCount = 1} },
+                                            {2, new SubGroup {Name = "SubgroupName2", StudentCount = 1} }
+                                        }
                                     }
                                 }
                             }
