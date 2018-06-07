@@ -1,13 +1,8 @@
 ﻿namespace Timetabling.Resources
 {
 
-    public class Day
+    public class Day : Element
     {
-
-        /// <summary>
-        /// Name of the day, e.g. Monday.
-        /// </summary>
-        public string Name { get; set; }
 
     }
 }

@@ -49,12 +49,12 @@ namespace Timetabling.Resources
         /// <summary>
         /// Constraints on time resources for this timetable.
         /// </summary>
-        public Dictionary<int, AbstractConstraint> TimeConstraints { get; set; }
+        public Dictionary<int, TimeConstraint> TimeConstraints { get; set; }
 
         /// <summary>
         /// Constraints on space / location resources for this timetable.
         /// </summary>
-        public Dictionary<int, AbstractConstraint> SpaceConstraints { get; set; }
+        public Dictionary<int, SpaceConstraint> SpaceConstraints { get; set; }
 
         private readonly Dictionary<Type, object> _typeDict;
 
@@ -64,7 +64,7 @@ namespace Timetabling.Resources
         /// <typeparam name="T">Type of collection</typeparam>
         /// <param name="key">Key to retrieve value for.</param>
         /// <param name="collection">Collection to find key in.</param>
-        /// <returns>Value of type T belonging to thet specified key.</returns>
+        /// <returns>Value of type T belonging to the specified key.</returns>
         public T GetValue<T>(int? key, Dictionary<int, T> collection)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
@@ -72,6 +72,16 @@ namespace Timetabling.Resources
 
             return collection[key.Value];
         }
+
+        public Day GetDay(int? key) => GetValue(key, Days);
+        public Timeslot GetTimeslot(int? key) => GetValue(key, Timeslots);
+        public Subject GetSubject(int? key) => GetValue(key, Subjects);
+        public Teacher GetTeacher(int? key) => GetValue(key, Teachers);
+        public StudentSet GetStudent(int? key) => GetValue(key, Students);
+        public Activity GetActivity(int? key) => GetValue(key, Activities);
+        public Room GetRoom(int? key) => GetValue(key, Rooms);
+        public TimeConstraint GetTimeConstraint(int? key) => GetValue(key, TimeConstraints);
+        public SpaceConstraint GetSpaceConstraint(int? key) => GetValue(key, SpaceConstraints);
 
     }
 }

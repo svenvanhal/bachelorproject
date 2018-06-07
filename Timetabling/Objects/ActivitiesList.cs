@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Timetabling.DB;
 using System.Linq;
 using System.Xml.Linq;
+using Timetabling.DB;
 using Timetabling.Resources;
 
 namespace Timetabling.Objects
@@ -73,14 +73,14 @@ namespace Timetabling.Objects
                 for (var i = 1; i <= activity.NumberOfLlessonsPerWeek; i++)
                 {
 
-                    // Temporary: test new functionality
+                    // Create activity
                     activities.Add(counter, new Activity()
                     {
                         Id = counter,
                         GroupId = groupId,
-                        Teacher = resources.GetValue((int) activity.TeacherID, resources.Teachers),
-                        Subject = resources.GetValue(activity.SubjectID, resources.Subjects),
-                        Students = resources.GetValue(activity.ClassID, resources.Students),
+                        Teacher = resources.GetTeacher((int?) activity.TeacherID),
+                        Subject = resources.GetSubject(activity.SubjectID),
+                        Students = resources.GetStudent(activity.ClassID),
                         Duration = activity.NumberOfLlessonsPerDay, // TODO: what does NumberOfLlessonsPerDay mean exactly? Lessons sequential, during the day, min lessons per day, max lessons per day?
                         Lessons = activity.NumberOfLlessonsPerWeek // TODO: what does NumberOfLlessonsPerWeek mean exactly? Idem.
                     });

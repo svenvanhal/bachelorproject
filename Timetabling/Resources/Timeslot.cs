@@ -1,10 +1,8 @@
 ﻿namespace Timetabling.Resources
 {
 
-    public class Timeslot
+    public class Timeslot : Element
     {
-
-        public string Name { get; set; }
 
     }
 }

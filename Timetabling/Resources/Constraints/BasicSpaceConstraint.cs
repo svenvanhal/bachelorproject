@@ -1,7 +1,7 @@
 ﻿namespace Timetabling.Resources.Constraints
 {
     
-    public class BasicSpaceConstraint : AbstractConstraint
+    public class BasicSpaceConstraint : SpaceConstraint
     {
 
         public BasicSpaceConstraint() => Weight = 100;

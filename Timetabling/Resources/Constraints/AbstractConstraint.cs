@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace Timetabling.Resources.Constraints
+﻿namespace Timetabling.Resources.Constraints
 {
 
     /// <summary>
@@ -15,4 +13,8 @@ namespace Timetabling.Resources.Constraints
         public int Weight;
 
     }
+
+    public abstract class TimeConstraint : AbstractConstraint {}
+    public abstract class SpaceConstraint : AbstractConstraint {}
+
 }
