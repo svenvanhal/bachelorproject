@@ -21,8 +21,8 @@ namespace Implementation
             //   4 - Let the TimetableGenerator generate a Task<Timetable>
             //   5 - Do something with the Timetable output object when the Task finishes
 
-            //var inputGenerator = new ResourceGatherer(new DataModel());
-            //var inputGenerator = new Timetabling.Algorithms.FET.FetInputGenerator(null);
+            new Timetabling.Algorithms.FET.FetInputGenerator(null);
+            return;
 
             var model = new DataModel();
 
@@ -41,6 +41,8 @@ namespace Implementation
             resources.TimeConstraints = DboResourceFactory.GetTimeConstraints(model, resources);
             resources.SpaceConstraints = DboResourceFactory.GetSpaceConstraints(model, resources);
 
+
+            var inputGenerator = new Timetabling.Algorithms.FET.FetInputGenerator(resources);
             return;
 
 

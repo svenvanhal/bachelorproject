@@ -42,6 +42,7 @@
     <Compile Include="Algorithms\FET\FetAlgorithm.cs" />
     <Compile Include="Algorithms\FET\FetOutputProcessor.cs" />
     <Compile Include="Algorithms\FET\FetProcessInterface.cs" />
+    <Compile Include="Algorithms\FET\FetSerializer.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="DB\DataModel.cs" />
     <Compile Include="DB\HR_MasterData_Employees.cs" />

@@ -1,7 +1,7 @@
 ﻿namespace Timetabling.Resources
 {
 
-    public class Activity
+    public class Activity : Element
     {
 
         public int Id { get; set; }
@@ -11,6 +11,8 @@
         public StudentSet Students { get; set; }
         public int Duration { get; set; }
         public int Lessons { get; set; }
+
+        public int TotalDuration => Duration * Lessons;
 
     }
 }

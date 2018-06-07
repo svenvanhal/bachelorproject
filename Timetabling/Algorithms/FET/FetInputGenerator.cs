@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
-using System.Runtime.Serialization;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 using Timetabling.Resources;
-using Timetabling.Resources.Constraints;
 
 namespace Timetabling.Algorithms.FET
 {
@@ -34,11 +31,76 @@ namespace Timetabling.Algorithms.FET
 
             _fs = fileSystem;
 
-            var res = CreateTestObject();
-            ToFet(res);
+            ToFet(resources ?? CreateTestObject());
 
             Console.Read();
         }
+
+        /// <summary>
+        /// Serialize Timetabling resources to FET-compatible XML file.
+        /// </summary>
+        /// <param name="resources">Timetabling resources.</param>
+        protected void ToFet(TimetableResourceCollection resources)
+        {
+            if (resources == null) throw new ArgumentNullException(nameof(resources));
+
+            // Create XDocument
+            var root = new XElement("fet", new XAttribute("version", "5.35.7"));
+            var document = new XDocument();
+            document.Add(root);
+
+            // Build FET XML structure
+            root.Add(SerializeDays(resources.Days));
+            root.Add(SerializeTimeslots(resources.Timeslots));
+            root.Add(Serialize("Subject_List", resources.Subjects));
+            root.Add(Serialize("Teachers_List", resources.Teachers));
+            root.Add(Serialize("Students_List", resources.Students));
+            root.Add(Serialize("Activities_List", resources.Activities));
+            root.Add(Serialize("Rooms_List", resources.Rooms));
+
+            Console.Write(document.ToString());
+
+            Console.Read();
+
+        }
+
+        /// <summary>
+        /// Serializes a subclass of Element to XML.
+        /// N.B.: The element type is only checked on runtime, so FetSerializer.Serialize() MUST have an overload for all subclasses of Element to prevent any unexpected exceptions.
+        /// </summary>
+        /// <typeparam name="T">Type of the input resource element</typeparam>
+        /// <param name="elementName">Name of the containing element</param>
+        /// <param name="resources">Timetabling resources</param>
+        /// <returns>An XElement.</returns>
+        protected XElement Serialize<T>(string elementName, Dictionary<int, T> resources) where T : Element
+        {
+            if (resources == null) throw new ArgumentNullException(nameof(resources));
+            var container = new XElement(elementName);
+
+            // Add elements
+            foreach (var element in resources) { container.Add(FetSerializer.Serialize((dynamic)element.Value)); }
+
+            return container;
+        }
+
+        protected XElement SerializeDays(Dictionary<int, Day> resources)
+        {
+            var element = Serialize("Days_List", resources);
+
+            // Add number of days
+            element.AddFirst(new XElement("Number_of_Days", resources.Count));
+            return element;
+        }
+
+        protected XElement SerializeTimeslots(Dictionary<int, Timeslot> resources)
+        {
+            var element = Serialize("Hours_List", resources);
+
+            // Add number of hours
+            element.AddFirst(new XElement("Number_of_Days", resources.Count));
+            return element;
+        }
+
 
         private TimetableResourceCollection CreateTestObject()
         {
@@ -59,17 +121,17 @@ namespace Timetabling.Algorithms.FET
 
                 Rooms = new Dictionary<int, Room>
                 {
-                    {1, new Room {Name = "Lab"}}
+                    {1, new Room {Id = 1, Name = "Lab"}}
                 },
 
                 Subjects = new Dictionary<int, Subject>
                 {
-                    {1, new Subject {Name = "Computer Science"}}
+                    {2, new Subject {Id = 2, Name = "Computer Science"}}
                 },
 
                 Teachers = new Dictionary<int, Teacher>
                 {
-                    {1, new Teacher {Name = "Sven"}}
+                    {59, new Teacher {Id = 59, Name = "Sven"}}
                 },
 
                 Students = new Dictionary<int, StudentSet>
@@ -77,18 +139,18 @@ namespace Timetabling.Algorithms.FET
                     {
                         1, new StudentSet
                         {
+                            Id = 1,
                             Name = "2018",
-                            StudentCount = 1,
                             Groups = new Dictionary<int, Group>
                             {
                                 { 1, new Group
                                     {
+                                        Id = 1,
                                         Name = "GroupName",
-                                        StudentCount = 1,
                                         SubGroups = new Dictionary<int, SubGroup>
                                         {
-                                            {1, new SubGroup {Name = "SubgroupName", StudentCount = 1} },
-                                            {2, new SubGroup {Name = "SubgroupName2", StudentCount = 1} }
+                                            {1, new SubGroup {Id = 1, Name = "SubgroupName"} },
+                                            {2, new SubGroup {Id = 2, Name = "SubgroupName2"} }
                                         }
                                     }
                                 }
@@ -104,8 +166,8 @@ namespace Timetabling.Algorithms.FET
                     {
                         Id = 1,
                         GroupId = 2,
-                        Teacher = resources.GetValue(1, resources.Teachers),
-                        Subject = resources.GetValue(1, resources.Subjects),
+                        Teacher = resources.GetValue(59, resources.Teachers),
+                        Subject = resources.GetValue(2, resources.Subjects),
                         Students = resources.GetValue(1, resources.Students),
                         Duration = 1,
                         Lessons = 10
@@ -115,90 +177,5 @@ namespace Timetabling.Algorithms.FET
 
             return resources;
         }
-
-        /// <summary>
-        /// Serialize Timetabling resources to FET-compatible XML file.
-        /// </summary>
-        /// <param name="resources">Timetabling resources.</param>
-        /// <param name="overrides">XML overrides.</param>
-        protected void ToFet(TimetableResourceCollection resources)
-        {
-            if (resources == null) throw new ArgumentNullException(nameof(resources));
-
-            // Create XDocument
-            var root = new XElement("fet", new XAttribute("version", "5.35.7"));
-            var document = new XDocument();
-            document.Add(root);
-
-            // Build FET XML structure
-            //root.Add(Serialize("Days_List", resources.Days));
-            //root.Add(Serialize("Hour_List", resources.Timeslots));
-
-            Console.Write(document.ToString());
-
-            Console.Read();
-
-        }
-
-        protected XElement SerializeElement<Element>(Day element)
-        {
-            return new XElement("Day", new XElement("Name", element.Name));
-        }
-
-        protected XElement SerializeElement<Element>(Timeslot element)
-        {
-            return new XElement("Day", new XElement("Name", element.Name));
-        }
-
-        protected XElement SerializeDays(TimetableResourceCollection resources)
-        {
-            // Validation
-            if(resources == null) throw new ArgumentNullException(nameof(resources));
-            if(resources.Days == null) throw new ArgumentNullException(nameof(resources), $"The Days object in { nameof(resources) } is null.");
-
-            // Create Days wrapper
-            var container = new XElement("Days_List");
-
-            foreach (var day in resources.Days) {
-                container.Add(new XElement("Day", new XElement("Name", day.Value.Name)));
-            }
-
-            return container;
-        }
-
-        protected XElement SerializeTimeslots(TimetableResourceCollection resources)
-        {
-            // Validation
-            if (resources == null) throw new ArgumentNullException(nameof(resources));
-            if (resources.Timeslots == null) throw new ArgumentNullException(nameof(resources), $"The Timeslots object in { nameof(resources) } is null.");
-
-            // Create Days wrapper
-            var container = new XElement("Hours_List");
-
-            foreach (var hour in resources.Timeslots) {
-                container.Add(new XElement("Hour", new XElement("Name", hour.Value.Name)));
-            }
-
-            return container;
-        }
-
-        protected XElement SerializeSubjects(TimetableResourceCollection resources)
-        {
-            // Validation
-            if (resources == null) throw new ArgumentNullException(nameof(resources));
-            if (resources.Subjects == null) throw new ArgumentNullException(nameof(resources), $"The Subjects object in { nameof(resources) } is null.");
-
-            // Create Days wrapper
-            var container = new XElement("Subjects_List");
-
-            foreach (var subject in resources.Subjects)
-            {
-                container.Add(new XElement("Subject",
-                    new XElement("Name", subject.Value.Name)));
-            }
-
-            return container;
-        }
-
     }
 }

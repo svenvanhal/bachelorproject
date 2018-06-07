@@ -1,11 +1,10 @@
 ﻿namespace Timetabling.Resources
 {
 
-    public class Teacher
+    public class Teacher : Element
     {
 
         public int Id { get; set; }
-        public string Name { get; set; }
 
     }
 }
