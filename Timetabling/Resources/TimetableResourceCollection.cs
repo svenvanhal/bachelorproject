@@ -65,6 +65,8 @@ namespace Timetabling.Resources
         /// <param name="key">Key to retrieve value for.</param>
         /// <param name="collection">Collection to find key in.</param>
         /// <returns>Value of type T belonging to the specified key.</returns>
+        /// <exception cref="ArgumentNullException">When the resource collection is null.</exception>
+        /// <exception cref="KeyNotFoundException">When the specified key cannot be found in the resource collection.</exception>
         public T GetValue<T>(int? key, Dictionary<int, T> collection)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));

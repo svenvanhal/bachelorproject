@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Implementation.Key2Soft;
 using Timetabling;
@@ -21,9 +20,26 @@ namespace Implementation
             //   4 - Let the TimetableGenerator generate a Task<Timetable>
             //   5 - Do something with the Timetable output object when the Task finishes
 
-            new Timetabling.Algorithms.FET.FetInputGenerator(null);
-            return;
+            //var inputGenerator = new Timetabling.Algorithms.FET.FetInputGenerator();
+            //inputGenerator.BuildXml(resources);
+            //return;
 
+            var program = new Program();
+            //var resources = program.GetResources();
+            var resources = Timetabling.Algorithms.FET.FetInputGenerator.CreateTestObject();
+
+            var generator = new TimetableGenerator();
+            var task = generator.RunAlgorithm(new FetAlgorithm(), resources);
+
+
+            task.ContinueWith(OnSuccess, TaskContinuationOptions.OnlyOnRanToCompletion);
+            task.ContinueWith(OnError, TaskContinuationOptions.OnlyOnFaulted);
+            
+            Console.Read();
+        }
+
+        public TimetableResourceCollection GetResources()
+        {
             var model = new DataModel();
 
             var resources = new TimetableResourceCollection
@@ -36,37 +52,33 @@ namespace Implementation
                 Students = DboResourceFactory.GetYears(model),
             };
 
-            // Note: we need to pass the generated resources up to this moment!
             resources.Activities = DboResourceFactory.GetActivities(model, resources);
             resources.TimeConstraints = DboResourceFactory.GetTimeConstraints(model, resources);
             resources.SpaceConstraints = DboResourceFactory.GetSpaceConstraints(model, resources);
 
+            return resources;
+        }
 
-            var inputGenerator = new Timetabling.Algorithms.FET.FetInputGenerator(resources);
-            return;
+        public static void OnSuccess(Task<Timetable> t)
+        {
+            Console.WriteLine("The timetable has been generated sucessfully.");
+            Console.WriteLine(t);
 
+            Console.Read();
+        }
 
-            var algorithm = new FetAlgorithm();
+        public static void OnError(Task<Timetable> t)
+        {
+            
 
-            // TODO: improve FET input file generation
-            var inputFile = FetInputGenerator.GenerateFetFile(new DataModel(), Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), "fetInputGenerator")).FullName);
-
-            var generator = new TimetableGenerator();
-            var task = generator.RunAlgorithm(algorithm, inputFile);
-
-            // On success
-            task.ContinueWith(t =>
+            var exs = t.Exception.InnerExceptions;
+            
+            foreach (var e in exs)
             {
-                Console.WriteLine("The timetable has been generated sucessfully.");
-                Console.WriteLine(task.Result);
-            }, TaskContinuationOptions.NotOnFaulted);
+                Console.WriteLine(e.Message);
+            }
 
-            // On error
-            task.ContinueWith(t =>
-            {
-                Console.WriteLine("The timetable could not be generated.");
-                foreach (var ex in t.Exception.InnerExceptions) { Console.WriteLine(ex.Message); }
-            }, TaskContinuationOptions.OnlyOnFaulted);
+            Console.WriteLine("The timetable could not be generated.");
 
             Console.Read();
         }

@@ -12,13 +12,13 @@ namespace Timetabling.Algorithms
     {
 
         /// <summary>
-        /// Initialize and execute algorithm, return results.
+        /// Generate Task which executes the algorithm on a given resource collection.
         /// </summary>
         /// <param name="identifier">Unique identifier for this algorithm run.</param>
         /// <param name="input">Input to run the algorithm on.</param>
         /// <param name="t">Cancellation token.</param>
         /// <returns>A Task-object yielding a Timetable.</returns>
-        protected internal abstract Task<Timetable> GenerateTask(string identifier, string input, CancellationToken t);
+        protected internal abstract Task<Timetable> GenerateTask(string identifier, TimetableResourceCollection input, CancellationToken t);
 
     }
 }

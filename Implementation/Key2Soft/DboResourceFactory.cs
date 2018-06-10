@@ -127,51 +127,58 @@ namespace Implementation.Key2Soft
         /// <returns>Dictionary with key:id and value:StudentSet.</returns>
         public static Dictionary<int, StudentSet> GetYears(DataModel model)
         {
-
             var grades = new Dictionary<int, StudentSet>();
 
-            // Loop over all grades
-            foreach (var grade in model.School_Lookup_Grade.Where(grade => grade.IsActive == true))
-            {
-                var resultGrade = new StudentSet
+            var gradeQuery =
+                from grade in model.School_Lookup_Grade
+                where grade.IsActive == true
+                select new
                 {
-                    Id = grade.GradeID,
-                    Name = grade.GradeName
+                    GradeId = grade.GradeID,
+                    GradeName = grade.GradeName,
                 };
 
-                // Add groups for each grade
-                var groups = from c in model.School_Lookup_Class
-                             join g in model.School_Lookup_Grade on c.GradeID equals g.GradeID
-                             where c.IsActive == true
-                             select new { c.ClassID, c.ClassName };
+            Console.Read();
 
-                foreach (var group in groups)
+            // Loop over all grades
+            foreach (var grade in gradeQuery)
+            {
+
+                // Create new student ste
+                var studentSet = new StudentSet
+                {
+                    Id = grade.GradeId,
+                    Name = grade.GradeName,
+                };
+
+                // Find classes in student set
+                var groupQuery =
+                    from cls in model.School_Lookup_Class
+                    join grp in model.Tt_ClassGroup on cls.ClassID equals grp.classId into subGroups
+                    where cls.IsActive == true && cls.GradeID == grade.GradeId
+                    select new { ClassId = cls.ClassID, cls.ClassName, SubGroups = subGroups };
+
+                foreach (var cls in groupQuery)
                 {
 
-                    var resultGroup = new Group
+                    var group = new Group
                     {
-                        Id = group.ClassID,
-                        Name = group.ClassName
+                        Id = cls.ClassId,
+                        Name = cls.ClassName,
                     };
 
-                    // Add subgroups for each grade
-                    var subGroups = from g in model.Tt_ClassGroup
-                                    join c in model.School_Lookup_Class on g.classId equals c.ClassID
-                                    select new { g.Id, g.groupName };
-
-                    foreach (var subGroup in subGroups)
+                    foreach (var subGroup in cls.SubGroups)
                     {
-                        resultGroup.SubGroups.Add(subGroup.Id, new SubGroup
+                        group.SubGroups.Add(subGroup.Id, new SubGroup
                         {
                             Id = subGroup.Id,
                             Name = subGroup.groupName
                         });
                     }
 
-                    resultGrade.Groups.Add(group.ClassID, resultGroup);
                 }
 
-                grades.Add(grade.GradeID, resultGrade);
+                grades.Add(grade.GradeId, studentSet);
             }
 
             return grades;
@@ -213,9 +220,9 @@ namespace Implementation.Key2Soft
                     {
                         Id = counter,
                         GroupId = groupId,
-                        Teacher = resources.GetTeacher((int?)activity.TeacherID),
+                        Teacher = resources.GetTeacher((int)activity.TeacherID),
                         Subject = resources.GetSubject(activity.SubjectID),
-                        Students = resources.GetStudent(activity.ClassID),
+                        Students = resources.GetStudent(activity.ClassID).Groups[0], // TODO: fix this line
                         Duration = activity.NumberOfLlessonsPerDay, // TODO: what does NumberOfLlessonsPerDay mean exactly? Lessons sequential, during the day, min lessons per day, max lessons per day?
                         Lessons = activity.NumberOfLlessonsPerWeek // TODO: what does NumberOfLlessonsPerWeek mean exactly? Idem.
                     });

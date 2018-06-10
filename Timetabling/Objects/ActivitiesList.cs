@@ -80,7 +80,7 @@ namespace Timetabling.Objects
                         GroupId = groupId,
                         Teacher = resources.GetTeacher((int?) activity.TeacherID),
                         Subject = resources.GetSubject(activity.SubjectID),
-                        Students = resources.GetStudent(activity.ClassID),
+                        Students = resources.GetStudent(activity.ClassID).Groups[0], // TODO: fix this line
                         Duration = activity.NumberOfLlessonsPerDay, // TODO: what does NumberOfLlessonsPerDay mean exactly? Lessons sequential, during the day, min lessons per day, max lessons per day?
                         Lessons = activity.NumberOfLlessonsPerWeek // TODO: what does NumberOfLlessonsPerWeek mean exactly? Idem.
                     });
