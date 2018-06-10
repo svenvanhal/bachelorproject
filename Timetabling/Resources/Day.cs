@@ -1,7 +1,7 @@
 ﻿namespace Timetabling.Resources
 {
 
-    public class Day : Element
+    public class Day : Resource
     {
 
     }

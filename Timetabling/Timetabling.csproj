@@ -72,7 +72,7 @@
     <Compile Include="Algorithms\Algorithm.cs" />
     <Compile Include="Resources\Constraints\BasicSpaceConstraint.cs" />
     <Compile Include="Resources\Constraints\BasicTimeConstraint.cs" />
-    <Compile Include="Resources\Element.cs" />
+    <Compile Include="Resources\Resource.cs" />
     <Compile Include="Resources\Day.cs" />
     <Compile Include="Resources\Activity.cs" />
     <Compile Include="Resources\Constraints\AbstractConstraint.cs" />

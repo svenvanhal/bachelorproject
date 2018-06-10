@@ -68,14 +68,14 @@ namespace Timetabling.Algorithms.FET
         }
 
         /// <summary>
-        /// Serializes a subclass of Element to XML.
-        /// N.B.: The element type is only checked on runtime, so FetSerializer.Serialize() MUST have an overload for all subclasses of Element to prevent any unexpected exceptions.
+        /// Serializes a subclass of Resource to XML.
+        /// N.B.: The element type is only checked on runtime, so FetSerializer.Serialize() MUST have an overload for all subclasses of Resource to prevent any unexpected exceptions.
         /// </summary>
         /// <typeparam name="T">Type of the input resource element</typeparam>
         /// <param name="elementName">Name of the containing element</param>
         /// <param name="resources">Timetabling resources</param>
         /// <returns>An XElement.</returns>
-        protected XElement Serialize<T>(string elementName, Dictionary<int, T> resources) where T : Element
+        protected XElement Serialize<T>(string elementName, Dictionary<int, T> resources) where T : Resource
         {
             if (resources == null) throw new ArgumentNullException(nameof(resources));
             var container = new XElement(elementName);

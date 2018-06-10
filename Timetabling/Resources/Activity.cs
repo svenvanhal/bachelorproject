@@ -1,7 +1,7 @@
 ﻿namespace Timetabling.Resources
 {
 
-    public class Activity : Element
+    public class Activity : Resource
     {
 
         public int Id { get; set; }

@@ -3,7 +3,7 @@
 namespace Timetabling.Resources
 {
 
-    public class StudentSet : Element
+    public class StudentSet : Resource
     {
 
         public int Id { get; set; }
