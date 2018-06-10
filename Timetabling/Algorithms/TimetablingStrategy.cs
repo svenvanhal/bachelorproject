@@ -6,13 +6,14 @@ namespace Timetabling.Algorithms
 {
 
     /// <summary>
-    /// Task-based timetable generation.
+    /// Timetabling strategy. Subclasses generate a Timetable task based on a timetabling algorithm.
     /// </summary>
-    public abstract class Algorithm
+    public abstract class TimetablingStrategy
     {
 
         /// <summary>
-        /// Generate Task which executes the algorithm on a given resource collection.
+        /// Generates the timetabling task. Executes an algorithm on a data set and returns results. Timetable generation
+        /// can be cancelled using the provided CancellationToken.
         /// </summary>
         /// <param name="identifier">Unique identifier for this algorithm run.</param>
         /// <param name="input">Input to run the algorithm on.</param>

@@ -40,15 +40,15 @@ namespace Timetabling
         /// <summary>
         /// Run an algorithm on an input file.
         /// </summary>
-        public Task<Timetable> RunAlgorithm(Algorithm algorithm, TimetableResourceCollection inputfile)
+        public Task<Timetable> RunAlgorithm(TimetablingStrategy strategy, TimetableResourceCollection inputfile)
         {
-            Logger.Info($"Starting {algorithm.GetType().Name} algorithm run");
+            Logger.Info($"Starting {strategy.GetType().Name} algorithm run");
 
             // Generate new ID for this algorithm run
             RefreshIdentifier();
 
             // Generate timetable
-            return algorithm.GenerateTask(CurrentRunIdentifier, inputfile, TokenSource.Token);
+            return strategy.GenerateTask(CurrentRunIdentifier, inputfile, TokenSource.Token);
         }
 
         /// <summary>

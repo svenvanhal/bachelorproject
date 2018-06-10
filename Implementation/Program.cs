@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Implementation.Key2Soft;
 using Timetabling;
+using Timetabling.Algorithms;
 using Timetabling.Algorithms.FET;
 using Timetabling.DB;
 using Timetabling.Resources;
@@ -23,13 +24,14 @@ namespace Implementation
             //var inputGenerator = new Timetabling.Algorithms.FET.FetInputGenerator();
             //inputGenerator.BuildXml(resources);
             //return;
+            TimetablingStrategy algorithm = new FetAlgorithm();
 
             var program = new Program();
             //var resources = program.GetResources();
             var resources = Timetabling.Algorithms.FET.FetInputGenerator.CreateTestObject();
 
             var generator = new TimetableGenerator();
-            var task = generator.RunAlgorithm(new FetAlgorithm(), resources);
+            var task = generator.RunAlgorithm(algorithm, resources);
 
 
             task.ContinueWith(OnSuccess, TaskContinuationOptions.OnlyOnRanToCompletion);
