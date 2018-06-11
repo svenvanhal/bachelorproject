@@ -19,16 +19,16 @@ namespace Timetabling.Tests.Objects
         public void Init()
         {
 
-            var data = new List<School_TeacherClass_Subjects>{
-                new School_TeacherClass_Subjects{ ClassID = 1, SubjectID = 1,  TeacherID = 0},
-                new School_TeacherClass_Subjects{ ClassID = 2, SubjectID = 0,  TeacherID = 4},
+            var data = new List<tt_ActitvityGroup>{
+                new tt_ActitvityGroup{ classId = 1, subjectId = 1,  teacherId = 0, gradeId = 60, ActivityRefID = 1, Id = 1},
+                new tt_ActitvityGroup{ classId = 2, subjectId = 0,  teacherId = 4, gradeId = 60, ActivityRefID = 2},
             }.AsQueryable();
 
-            var mockSet = new Mock<DbSet<School_TeacherClass_Subjects>>();
-            mockSet.As<IQueryable<School_TeacherClass_Subjects>>().Setup(m => m.Provider).Returns(data.Provider);
-            mockSet.As<IQueryable<School_TeacherClass_Subjects>>().Setup(m => m.Expression).Returns(data.Expression);
-            mockSet.As<IQueryable<School_TeacherClass_Subjects>>().Setup(m => m.ElementType).Returns(data.ElementType);
-            mockSet.As<IQueryable<School_TeacherClass_Subjects>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
+            var mockSet = new Mock<DbSet<tt_ActitvityGroup>>();
+            mockSet.As<IQueryable<tt_ActitvityGroup>>().Setup(m => m.Provider).Returns(data.Provider);
+            mockSet.As<IQueryable<tt_ActitvityGroup>>().Setup(m => m.Expression).Returns(data.Expression);
+            mockSet.As<IQueryable<tt_ActitvityGroup>>().Setup(m => m.ElementType).Returns(data.ElementType);
+            mockSet.As<IQueryable<tt_ActitvityGroup>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
 
             var data2 = new List<School_Lookup_Class>{
                 new School_Lookup_Class{ClassName = "test", ClassID = 1, GradeID = 60},
@@ -54,14 +54,54 @@ namespace Timetabling.Tests.Objects
             mockSet3.As<IQueryable<Subject_SubjectGrade>>().Setup(m => m.ElementType).Returns(data3.ElementType);
             mockSet3.As<IQueryable<Subject_SubjectGrade>>().Setup(m => m.GetEnumerator()).Returns(data3.GetEnumerator());
 
+            var data4 = new List<HR_MasterData_Employees>{
+                new HR_MasterData_Employees{EmployeeID = 0, IsActive = true, IsTeacher =true
+                },
+                new HR_MasterData_Employees{EmployeeID = 4, IsActive = true, IsTeacher =true
+                },
+            }.AsQueryable();
+
+            var mockSet4 = new Mock<DbSet<HR_MasterData_Employees>>();
+            mockSet4.As<IQueryable<HR_MasterData_Employees>>().Setup(m => m.Provider).Returns(data4.Provider);
+            mockSet4.As<IQueryable<HR_MasterData_Employees>>().Setup(m => m.Expression).Returns(data4.Expression);
+            mockSet4.As<IQueryable<HR_MasterData_Employees>>().Setup(m => m.ElementType).Returns(data4.ElementType);
+            mockSet4.As<IQueryable<HR_MasterData_Employees>>().Setup(m => m.GetEnumerator()).Returns(data4.GetEnumerator());
+
+            var data5 = new List<TeacherClassSubjectGroup>{
+                 new TeacherClassSubjectGroup{GroupId = 2, teacherClassSubjectId= 1
+                 }
+             }.AsQueryable();
+
+            var mockSet5 = new Mock<DbSet<TeacherClassSubjectGroup>>();
+            mockSet5.As<IQueryable<TeacherClassSubjectGroup>>().Setup(m => m.Provider).Returns(data5.Provider);
+            mockSet5.As<IQueryable<TeacherClassSubjectGroup>>().Setup(m => m.Expression).Returns(data5.Expression);
+            mockSet5.As<IQueryable<TeacherClassSubjectGroup>>().Setup(m => m.ElementType).Returns(data5.ElementType);
+            mockSet5.As<IQueryable<TeacherClassSubjectGroup>>().Setup(m => m.GetEnumerator()).Returns(data5.GetEnumerator());
+
+
+            var data6 = new List<Tt_ClassGroup>{
+                new Tt_ClassGroup{Id = 2,groupName = "sub1"
+                 }
+             }.AsQueryable();
+
+            var mockSet6 = new Mock<DbSet<Tt_ClassGroup>>();
+            mockSet6.As<IQueryable<Tt_ClassGroup>>().Setup(m => m.Provider).Returns(data6.Provider);
+            mockSet6.As<IQueryable<Tt_ClassGroup>>().Setup(m => m.Expression).Returns(data6.Expression);
+            mockSet6.As<IQueryable<Tt_ClassGroup>>().Setup(m => m.ElementType).Returns(data6.ElementType);
+            mockSet6.As<IQueryable<Tt_ClassGroup>>().Setup(m => m.GetEnumerator()).Returns(data6.GetEnumerator());
+
             var mockDB = new Mock<DataModel>();
-            mockDB.Setup(item => item.School_TeacherClass_Subjects).Returns(mockSet.Object);
+            mockDB.Setup(item => item.tt_ActitvityGroup).Returns(mockSet.Object);
             mockDB.Setup(item => item.School_Lookup_Class).Returns(mockSet2.Object);
             mockDB.Setup(item => item.Subject_SubjectGrade).Returns(mockSet3.Object);
+            mockDB.Setup(item => item.HR_MasterData_Employees).Returns(mockSet4.Object);
+            mockDB.Setup(item => item.TeacherClassSubjectGroups).Returns(mockSet5.Object);
+            mockDB.Setup(item => item.Tt_ClassGroup).Returns(mockSet6.Object);
+
+
             var list = new ActivitiesList(mockDB.Object);
             list.Create();
             test = list.GetList();
-
         }
 
         [Test]
@@ -114,7 +154,7 @@ namespace Timetabling.Tests.Objects
         [Test]
         public void ActivityClassRightTest()
         {
-            Assert.AreEqual(4, test.Elements("Activity").Elements("Students").Count(item => item.Value.Equals("test")));
+            Assert.AreEqual(6, test.Elements("Activity").Elements("Students").Count(item => item.Value.Equals("test2")));
 
         }
 
@@ -123,6 +163,12 @@ namespace Timetabling.Tests.Objects
         {
             Assert.AreEqual(0, test.Elements("Activity").Elements("Students").Count(item => item.Value.Equals("wrong")));
 
+        }
+
+        [Test]
+        public void ActivitySubgroupTest()
+        {
+            Assert.AreEqual(4, test.Elements("Activity").Elements("Students").Count(item => item.Value.Equals("sub1")));
         }
     }
 }

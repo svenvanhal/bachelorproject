@@ -20,18 +20,6 @@ namespace Timetabling.DB
 		public virtual DbSet<HR_MasterData_Employees> HR_MasterData_Employees { get; set; }
 
 		/// <summary>
-		/// Gets or sets Lookup_Month.
-		/// </summary>
-		/// <value>Lookup_Month.</value>
-		public virtual DbSet<Lookup_Month> Lookup_Month { get; set; }
-
-		/// <summary>
-		/// Gets or sets Lookup_Year
-		/// </summary>
-		/// <value>Lookup_Year.</value>
-		public virtual DbSet<Lookup_Year> Lookup_Year { get; set; }
-
-		/// <summary>
 		/// Gets or sets School_Lookup_Class.
 		/// </summary>
 		/// <value>School_Lookup_Class.</value>
@@ -145,11 +133,17 @@ namespace Timetabling.DB
 		/// <value>The subject category.</value>
 		public virtual DbSet<Subject_Category> Subject_Category { get; set; }
 
-		/// <summary>
-		/// Creates the datamodel
-		/// </summary>
-		/// <param name="modelBuilder">Model builder.</param>
-		protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        /// <summary>
+        /// Gets or sets tt_ActitvityGroup.
+        /// </summary>
+        /// <value></value>
+	    public virtual DbSet<tt_ActitvityGroup> tt_ActitvityGroup { get; set; }
+
+        /// <summary>
+        /// Creates the datamodel
+        /// </summary>
+        /// <param name="modelBuilder">Model builder.</param>
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<HR_MasterData_Employees>()
 					.HasMany(e => e.HR_MasterData_Employees1)
@@ -181,10 +175,6 @@ namespace Timetabling.DB
 					.HasMany(e => e.School_TeacherSubjects)
 					.WithRequired(e => e.Subject_MasterData_Subject)
 					.WillCascadeOnDelete(false);
-
-			modelBuilder.Entity<TeacherClassSubjectGroup>()
-					.Property(e => e.GroupId)
-					.IsFixedLength();
 
 			modelBuilder.Entity<Tt_TeacherAcademicInfo>()
 					.HasOptional(e => e.Tt_TeacherAcademicInfo1)
