@@ -63,7 +63,7 @@
     <Compile Include="DB\Tt_SectionLessonConfiguration.cs" />
     <Compile Include="DB\Tt_TeacherAcademicInfo.cs" />
     <Compile Include="DB\Tt_TimeOff.cs" />
-    <Compile Include="Config\TimetablingConfig.cs" />
+    <Compile Include="Algorithms\FET\FetConfig.cs" />
     <Compile Include="XML\XmlCreator.cs" />
     <Compile Include="Objects\TeachersList.cs" />
     <Compile Include="Objects\AbstractList.cs" />
@@ -125,7 +125,6 @@
       <HintPath>packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
-    <Reference Include="nunit.framework" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NLog.config">
