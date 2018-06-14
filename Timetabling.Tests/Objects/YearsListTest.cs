@@ -42,12 +42,9 @@ namespace Timetabling.Tests.Objects
             mockSetClass.As<IQueryable<School_Lookup_Class>>().Setup(m => m.ElementType).Returns(dataClass.ElementType);
             mockSetClass.As<IQueryable<School_Lookup_Class>>().Setup(m => m.GetEnumerator()).Returns(dataClass.GetEnumerator());
 
-
             var mockDB = new Mock<DataModel>();
             mockDB.Setup(item => item.School_Lookup_Grade).Returns(mockSet.Object);
             mockDB.Setup(item => item.School_Lookup_Class).Returns(mockSetClass.Object);
-
-
 
             var list = new YearsList(mockDB.Object);
             test = list.Create();

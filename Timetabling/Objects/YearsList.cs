@@ -27,8 +27,7 @@ namespace Timetabling.Objects
                         join c in dB.School_Lookup_Class on g.GradeID equals c.GradeID into t
                         from c in t.DefaultIfEmpty()
                         select new { g.GradeName, c.ClassName };
-            
-            query.ToList().ForEach(x => System.Console.WriteLine(x));
+
             var grades = query.Select(item => item.GradeName).Distinct().ToList();
             var classes = query.Where(item => item.GradeName != null && item.ClassName != null).Select(item => new { item.GradeName, item.ClassName }).Distinct().ToList();
 
