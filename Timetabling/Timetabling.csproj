@@ -35,6 +35,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Algorithms\FET\FetInputGenerator.cs" />
     <Compile Include="Algorithms\FET\FetLanguage.cs" />
     <Compile Include="Algorithms\FET\FetProcessBuilder.cs" />
     <Compile Include="Algorithms\FET\FetAlgorithm.cs" />
@@ -42,6 +43,7 @@
     <Compile Include="Algorithms\FET\FetProcessFacade.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Algorithms\TimetablingStrategy.cs" />
+    <Compile Include="Helper\DatabaseHelper.cs" />
     <Compile Include="TimetableGenerator.cs" />
     <Compile Include="Resources\Timetable.cs" />
     <Compile Include="Helper\CommandLineArguments.cs" />

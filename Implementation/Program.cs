@@ -1,10 +1,9 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Timetabling;
-using Timetabling.Algorithms;
 using Timetabling.Algorithms.FET;
 using Timetabling.DB;
+using Timetabling.Resources;
 
 namespace Implementation
 {
@@ -20,36 +19,45 @@ namespace Implementation
             //   4 - Let the TimetableGenerator generate a Task<Timetable>
             //   5 - Do something with the Timetable output object when the Task finishes
 
-            TimetablingStrategy algorithm = new FetAlgorithm();
 
-            // Generate input
-            var inputGen = new FetInputGenerator(new DataModel());
-            var inputFile = inputGen.GenerateFetFile(Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), "fetInputGenerator")).FullName);
-            var activities = inputGen.GetActivities();
+            var task = new Program().Start();
 
-            // Create algorithm task
-            var generator = new TimetableGenerator();
-            var task = generator.RunAlgorithm(algorithm, inputFile, activities);
+            task.ContinueWith(OnSuccess, TaskContinuationOptions.OnlyOnRanToCompletion);
+            task.ContinueWith(OnCanceled, TaskContinuationOptions.OnlyOnCanceled);
+            task.ContinueWith(OnError, TaskContinuationOptions.OnlyOnFaulted);
 
             task.Wait();
 
             Console.Read();
+        }
 
-            // On success
-            task.ContinueWith(t =>
-            {
-                Console.WriteLine("The timetable has been generated sucessfully.");
-                Console.WriteLine(task.Result);
-            }, TaskContinuationOptions.NotOnFaulted);
+        public Task<Timetable> Start()
+        {
 
-            // On error
-            task.ContinueWith(t =>
-            {
-                Console.WriteLine("The timetable could not be generated.");
-                foreach (var ex in t.Exception.InnerExceptions) { Console.WriteLine(ex.Message); }
-            }, TaskContinuationOptions.OnlyOnFaulted);
+            // Create algorithm task
+            var generator = new TimetableGenerator();
+            return generator.RunAlgorithm(new FetAlgorithm(), new DataModel());
+        }
 
-            Console.Read();
+        public static void OnSuccess(Task<Timetable> t)
+        {
+            var tt = t.Result;
+
+            Console.WriteLine("The timetable has been generated sucessfully.");
+            Console.WriteLine(tt);
+
+            // Save to database here
+        }
+
+        public static void OnError(Task<Timetable> t)
+        {
+            Console.WriteLine("The timetable could not be generated.");
+            foreach (var ex in t.Exception.InnerExceptions) { Console.WriteLine(ex.Message); }
+        }
+
+        public static void OnCanceled(Task<Timetable> t)
+        {
+            Console.WriteLine("The timetable task has been canceled.");
         }
     }
 }
