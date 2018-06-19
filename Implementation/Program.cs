@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Timetabling;
 using Timetabling.Algorithms.FET;
 using Timetabling.DB;
+using Timetabling.Helper;
 using Timetabling.Resources;
 
 namespace Implementation
@@ -11,42 +14,66 @@ namespace Implementation
     {
         static void Main(string[] args)
         {
+            
+            // Get information about academic year, quarter and section
+            var meta = GetMeta();
 
-            // Example usage:
-            //   1 - Instantiate and configure algorithm to use
-            //   2 - Specify input data for algorithm
-            //   3 - Create a TimetableGenerator
-            //   4 - Let the TimetableGenerator generate a Task<Timetable>
-            //   5 - Do something with the Timetable output object when the Task finishes
-
-
+            // Start program by creating a Task<Timetable>
             var task = new Program().Start();
 
-            task.ContinueWith(OnSuccess, TaskContinuationOptions.OnlyOnRanToCompletion);
+            // Attach handlers
+            task.ContinueWith(t => OnSuccess(t, meta), TaskContinuationOptions.OnlyOnRanToCompletion);
             task.ContinueWith(OnCanceled, TaskContinuationOptions.OnlyOnCanceled);
             task.ContinueWith(OnError, TaskContinuationOptions.OnlyOnFaulted);
 
+            // Debug
             task.Wait();
-
             Console.Read();
         }
 
         public Task<Timetable> Start()
         {
-
             // Create algorithm task
             var generator = new TimetableGenerator();
             return generator.RunAlgorithm(new FetAlgorithm(), new DataModel());
         }
 
-        public static void OnSuccess(Task<Timetable> t)
+        private static IList<int> GetMeta()
         {
+            using (var model = new DataModel())
+            {
+
+                // Get academic year id, section id and quarter id.
+                var row = from aq in model.AcademicQuarter
+                          where aq.IsActive == true
+                          select new List<int> { aq.AcademicYearID ?? 0, aq.QuarterId ?? 0, aq.SectionId ?? 0 };
+
+                return row.Any() ? row.First() : null;
+            }
+        }
+
+        public static void OnSuccess(Task<Timetable> t, IList<int> meta)
+        {
+
             var tt = t.Result;
+
+            // Update timetable with metadata
+            if (meta?.Count == 3)
+            {
+                tt.AcademicYearId = meta[0];
+                tt.QuarterId = meta[1];
+                tt.SectionId = meta[2];
+            }
 
             Console.WriteLine("The timetable has been generated sucessfully.");
             Console.WriteLine(tt);
 
             // Save to database here
+            using (var dbHelper = new DatabaseHelper())
+            {
+                dbHelper.SaveTimetable(tt);
+            }
+                
         }
 
         public static void OnError(Task<Timetable> t)
@@ -59,5 +86,6 @@ namespace Implementation
         {
             Console.WriteLine("The timetable task has been canceled.");
         }
+
     }
 }
