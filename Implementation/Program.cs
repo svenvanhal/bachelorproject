@@ -30,7 +30,6 @@ namespace Implementation
 
             // Debug
             task.Wait();
-            Console.Read();
         }
 
         public Task<Timetable> Start()
