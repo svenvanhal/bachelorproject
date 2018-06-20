@@ -2,7 +2,7 @@
 using Moq;
 using Timetabling.Objects;
 using System.Xml.Linq;
-using Timetabling.DB;
+using System.Linq;
 
 namespace Timetabling.Tests.Objects
 {
@@ -11,21 +11,25 @@ namespace Timetabling.Tests.Objects
     {
 
         XElement test;
+        SpaceConstraintsList spaceConstraintsList;
 
         [SetUp]
         public void Init()
         {
-            var mockDB = new Mock<DataModel>();
-
-            var list = new SpaceConstraintsList(mockDB.Object);
-            test = list.List;
-
+            var testDataModel = new TestDataModel();
+            spaceConstraintsList = new SpaceConstraintsList(testDataModel.MockDataModel.Object);
+            test = spaceConstraintsList.Create();
         }
 
         [Test]
         public void ElementNameTest()
         {
             Assert.AreEqual("Space_Constraints_List", test.Name.ToString());
+        }
+
+        [Test]
+        public void CreateTest(){
+            Assert.AreEqual(2, spaceConstraintsList.Constraints.Count);
         }
 
     }
