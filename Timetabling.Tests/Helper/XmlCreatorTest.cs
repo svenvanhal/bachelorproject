@@ -37,5 +37,14 @@ namespace Timetabling.Tests.Helper
             xmlCreator.AddToRoot(list.ToArray());
             Assert.AreEqual(2, xmlCreator.Document.Elements("fet").Elements("test").Count());
         }
+
+        [Test]
+        public void FetVersionTest()
+        {
+            var version = "1.0.0";
+            var xmlCreator = new XmlCreator(version);
+
+            Assert.AreEqual(version, xmlCreator.Root.Attribute("version").Value);
+        }
     }
 }
