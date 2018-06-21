@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using Timetabling.Algorithms.FET;
 
@@ -70,6 +69,7 @@ namespace Timetabling.Tests.Algorithms.FET
         [Test]
         public void TerminateProcessTest()
         {
+            
             var expected = _fpi.Process.StartInfo;
             _fpi.StartProcess();
             _fpi.KillProcess();
@@ -80,6 +80,7 @@ namespace Timetabling.Tests.Algorithms.FET
 
             // Verify that the ProcessStartInfo matches the original (one of the few unique bits of information left on the Process object)
             Assert.AreEqual(expected, _fpi.Process.StartInfo);
+
         }
 
         [Test]

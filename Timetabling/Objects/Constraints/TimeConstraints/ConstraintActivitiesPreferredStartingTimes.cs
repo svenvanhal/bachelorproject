@@ -27,7 +27,6 @@ namespace Timetabling.Objects.Constraints.TimeConstraints
         /// Initializes a new instance of the
         /// <see cref="T:Timetabling.Objects.Constraints.TimeConstraints.ConstraintActivitiesPreferredStartingTimes"/> class.
         /// </summary>
-        /// <param name="activitiesList">Activities list.</param>
         public ConstraintActivitiesPreferredStartingTimes()
         {
             SetElement("ConstraintActivitiesPreferredStartingTimes");

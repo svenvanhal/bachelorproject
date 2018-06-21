@@ -1,11 +1,7 @@
 ﻿using NUnit.Framework;
-using Moq;
-using System.Data.Entity;
 using Timetabling.Objects;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using Timetabling.DB;
 
 namespace Timetabling.Tests.Objects
 {
@@ -48,8 +44,7 @@ namespace Timetabling.Tests.Objects
         [Test]
         public void SubjectNotActive()
         {
-            Assert.AreEqual(0, test.Elements("Subject").Elements("Name").Count(item => item.Value.Equals("0")));
-
+            Assert.AreEqual(0, test.Elements("Subject").Elements("Name").Count(item => item.Value.Equals("2")));
         }
     }
 }
